@@ -16,7 +16,7 @@ Terminal helpers for working with Wordpress, including, but not limited to:
 2. Run the following command from your repository root:
 
 
-	git submodule add git://github.com/cphcloud/ttools-wordpress.git ttools/wordpress; ./ttools/wordpress/install/install-ttools.sh;
+		git submodule add git://github.com/cphcloud/ttools-wordpress.git ttools/wordpress; ./ttools/wordpress/install/install-ttools.sh;
 
 
 **NOTE:** If you're adding this to an existing project, you'll need to have all your site root inside of a `public` directory.
