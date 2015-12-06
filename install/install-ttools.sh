@@ -10,14 +10,6 @@ echo ''
 echo 'for Wordpress: Installer'
 echo ''
 
-
-echo "This installer assumes you've already got a server set up."; 
-echo "If you don't have a server set up yet, you can just enter expected information";
-echo "- you can always change this in the config later.";
-
-
-
-
 echo "";
 
 echo "Please enter the project name:"
@@ -27,12 +19,6 @@ read PROJECTNAME
 echo "Please enter the host name of your server:"
 read HOST
 
-echo "Please enter your SSH user:"
-read SSHUSER
-
-echo "Please enter the path that your repository is checked out to on the server:"
-read REPODIR
-
 
 
 echo ""
@@ -41,17 +27,23 @@ echo "* Now creating project configuration for $PROJECTNAME"
 
 
 
-echo "Projectname: \"$PROJECTNAME\"
+echo "
+##############################################################
+# Terminal Tools Configuration for \"$PROJECTNAME\"
+# Add environments under \"Evnironments\"
+# Adjust the menu under \"Menu\" to your needs
+##############################################################
+Projectname: \"$PROJECTNAME\"
 Environments:
   Live:
     #required
     Host: \"$HOST\"
-    Sshuser: \"$SSHUSER\"
-    Repodir: \"$REPODIR\"
+    Sshuser: \"SSHUSER\"
+    Repodir: \"REPODIR\"
     #additional settings
     Domain: \"$HOST\"
     Sshport: \"\"
-    Composerpath: \"\"
+    Composerpath: \"\" #currently not used
     PhpPath: \"\"
   Dev:
     #add dev site info here
@@ -59,8 +51,8 @@ Menu:
   Heading1:
     Title: Local
     Item1:
-      Title: Git Pull & Sync Submodules
-      Command: \"ttools/githelpers/lib/git-pull.sh\"
+      Title: Local \"deploy\" (git pull etc.)
+      Command: \"ttools/githelpers/lib/git-pull.sh POSTDEPLOYSCRIPTHERE\"
     Item2:
       Title: Overwrite Local Site with Database & Assets from Live Site
       Command: \"ttools/sitesync-core/local/sync-environments.sh Live Local\"
@@ -71,7 +63,7 @@ Menu:
       Command: \"ttools/core/local/ssh.sh Dev\"
     Item2:
       Title: Deploy Dev Site
-      Command: \"ttools/githelpers/local/git-pull-remote.sh Dev\"
+      Command: \"ttools/githelpers/local/git-pull-remote.sh Dev POSTDEPLOYSCRIPTHERE\"
     Item3:
       Title: Push Database & Assets to Dev Site
       Command: \"ttools/sitesync-core/local/sync-environments.sh Local Dev\"
@@ -85,8 +77,8 @@ Menu:
       Command: \"ttools/core/local/ssh.sh Live\"
     Item2:
       Title: Deploy Live Site
-      Command: \"ttools/githelpers/local/git-pull-remote.sh Live\"
-ServerSync:
+      Command: \"ttools/githelpers/local/git-pull-remote.sh Live POSTDEPLOYSCRIPTHERE\"
+Sitesync:
   FrameworkModule: 'ttools/sitesync-wordpress'
 
 " > ttools/config.yml
@@ -97,30 +89,15 @@ echo "* Now installing ttools libraries"
 
 #core 
 git submodule add git://github.com/titledk/ttools-core.git ttools/core;
-#(needs to be on the "onedir" branch for now)
-cd ttools/core;
-git checkout onedir;
-cd ../..;
 
 #git helpers
 git submodule add https://github.com/titledk/ttools-githelpers.git ttools/githelpers
-#(needs to be on the "onedir" branch for now)
-cd ttools/githelpers;
-git checkout onedir;
-cd ../..;
 
 #sitesync core
 git submodule add https://github.com/titledk/ttools-sitesync-core.git ttools/sitesync-core
-#(needs to be on the "onedir" branch for now)
-cd ttools/sitesync-core;
-git checkout onedir;
-cd ../..;
-
 
 #sitesync wordpress
-#TODO this has not been upgraded to use the onedir versions yet
 git submodule add https://github.com/cphcloud/ttools-sitesync-wordpress.git ttools/sitesync-wordpress
-
 
 
 echo ""
@@ -142,7 +119,7 @@ echo ""
 
 
 
-read -p "Do you want to go ahead installing Wordpress now? <y/N> " prompt
+read -p "Do you want to go ahead installing Wordpress now (NOT YET IMPLEMENTED)? <y/N> " prompt
 if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
 then
   ./ttools/wordpress/install/install-wordpress.sh;
